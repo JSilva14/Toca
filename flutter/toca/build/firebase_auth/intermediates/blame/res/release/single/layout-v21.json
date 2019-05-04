@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\Asus\\Documents\\Toca\\flutter\\toca\\build\\firebase_auth\\intermediates\\res\\merged\\release\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\82cfbb430ed0b3f160d2d6f76e6d2026\\res\\layout-v21\\notification_action_tombstone.xml"
+    },
+    {
+        "merged": "C:\\Users\\Asus\\Documents\\Toca\\flutter\\toca\\build\\firebase_auth\\intermediates\\res\\merged\\release\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\82cfbb430ed0b3f160d2d6f76e6d2026\\res\\layout-v21\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "C:\\Users\\Asus\\Documents\\Toca\\flutter\\toca\\build\\firebase_auth\\intermediates\\res\\merged\\release\\layout-v21\\notification_action.xml",
+        "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\82cfbb430ed0b3f160d2d6f76e6d2026\\res\\layout-v21\\notification_action.xml"
+    },
+    {
+        "merged": "C:\\Users\\Asus\\Documents\\Toca\\flutter\\toca\\build\\firebase_auth\\intermediates\\res\\merged\\release\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\82cfbb430ed0b3f160d2d6f76e6d2026\\res\\layout-v21\\notification_template_icon_group.xml"
+    }
+]
