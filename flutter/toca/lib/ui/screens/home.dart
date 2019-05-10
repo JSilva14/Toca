@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:toca/model/consumable.dart';
+import 'package:toca/ui/screens/newConsumable.dart';
 import 'package:toca/utils/store.dart';
 import 'package:toca/ui/widgets/consumable_card.dart';
 import 'package:toca/model/state.dart';
@@ -194,7 +195,10 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               RaisedButton(
                 child: Text('Novo consumível'),
-                onPressed: () => print('novo consumivel'),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => NewConsumable())),
               ),
               _buildAddFunds(),
               RaisedButton(
@@ -259,13 +263,12 @@ class HomeScreenState extends State<HomeScreen> {
         content: Text('Ocorreu um erro'));
 
     double currentBalance = await getCurrentBalance(appState.user.email);
-    
+
     if (currentBalance < consumablePrice) {
       scaffoldKey.currentState.showSnackBar(snackbarBalance);
     } else if (stock <= 0) {
       scaffoldKey.currentState.showSnackBar(snackbarStock);
     } else {
-      
       setState(() {
         appState.isLoading = true;
       });
