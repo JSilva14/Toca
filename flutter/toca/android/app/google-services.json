@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "352296275218",
+    "firebase_url": "https://a-toca.firebaseio.com",
+    "project_id": "a-toca",
+    "storage_bucket": "a-toca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352296275218:android:1a06c9d04b02ea51",
+        "android_client_info": {
+          "package_name": "com.example.toca"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "352296275218-s8hvv2tn0bfic27ed0i4muvadold8ffr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toca",
+            "certificate_hash": "72efecd629665de2f141317956ee45709cbe610e"
+          }
+        },
+        {
+          "client_id": "352296275218-u4o9j0vcvdaup3ehrbcco2369jskp2cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaMBBn7TjyFPQkJzcs0V2_AAIA5K-oZcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352296275218-u4o9j0vcvdaup3ehrbcco2369jskp2cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

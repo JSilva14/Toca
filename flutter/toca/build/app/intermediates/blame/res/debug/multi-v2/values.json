@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\jetified-play-services-basement-16.1.0.aar\\631c5e9ae7d1e7b7ab6ee13c044e2e65\\res\\values\\values.xml",
+                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\jetified-play-services-basement-16.1.0.aar\\11a0a7737063b90bb18832dcab372425\\res\\values\\values.xml",
                     "from": {
                         "startLines": "4,7",
                         "startColumns": "0,0",
@@ -38,43 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\media-1.0.0-rc01.aar\\62baf854f367764cc959800fe896682f\\res\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,144,215,288,341,394,447,500,560,626,748,809,875",
-                        "endColumns": "88,70,72,52,52,52,52,59,65,121,60,65,66",
-                        "endOffsets": "139,210,283,336,389,442,495,555,621,743,804,870,937"
-                    },
-                    "to": {
-                        "startLines": "13,14,16,297,298,299,300,311,351,353,354,359,361",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "969,1058,1187,16757,16810,16863,16916,17459,21487,21663,21785,22047,22242",
-                        "endColumns": "88,70,72,52,52,52,52,59,65,121,60,65,66",
-                        "endOffsets": "1053,1124,1255,16805,16858,16911,16964,17514,21548,21780,21841,22108,22304"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\coordinatorlayout-1.0.0-rc01.aar\\23040d7871347360aa668b996aa733c7\\res\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,13,102",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,116,724,5935",
-                        "endLines": "2,12,101,104",
-                        "endColumns": "60,24,24,12",
-                        "endOffsets": "111,719,5930,6075"
-                    },
-                    "to": {
-                        "startLines": "2,25,35,364",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "105,1632,2240,22448",
-                        "endLines": "2,34,123,366",
-                        "endColumns": "60,24,24,12",
-                        "endOffsets": "161,2235,7446,22588"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\82cfbb430ed0b3f160d2d6f76e6d2026\\res\\values\\values.xml",
+                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.0.0-rc01.aar\\142e33adb2337cb09b8ceeca3a54f3a7\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,13,56,88,125,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,171,172,176,177,178",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -93,7 +57,43 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\jetified-play-services-base-16.0.1.aar\\791cc6f607369f00f3fc050164b9134c\\res\\values\\values.xml",
+                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\media-1.0.0-rc01.aar\\c0ba9446c65deb1c06ccbb9dd9295df9\\res\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,144,215,288,341,394,447,500,560,626,748,809,875",
+                        "endColumns": "88,70,72,52,52,52,52,59,65,121,60,65,66",
+                        "endOffsets": "139,210,283,336,389,442,495,555,621,743,804,870,937"
+                    },
+                    "to": {
+                        "startLines": "13,14,16,297,298,299,300,311,351,353,354,359,361",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "969,1058,1187,16757,16810,16863,16916,17459,21487,21663,21785,22047,22242",
+                        "endColumns": "88,70,72,52,52,52,52,59,65,121,60,65,66",
+                        "endOffsets": "1053,1124,1255,16805,16858,16911,16964,17514,21548,21780,21841,22108,22304"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\coordinatorlayout-1.0.0-rc01.aar\\7b352bcb0681a687875e1f093ebcfcd3\\res\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,13,102",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,116,724,5935",
+                        "endLines": "2,12,101,104",
+                        "endColumns": "60,24,24,12",
+                        "endOffsets": "111,719,5930,6075"
+                    },
+                    "to": {
+                        "startLines": "2,25,35,364",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "105,1632,2240,22448",
+                        "endLines": "2,34,123,366",
+                        "endColumns": "60,24,24,12",
+                        "endOffsets": "161,2235,7446,22588"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-1\\files-1.1\\jetified-play-services-base-16.0.1.aar\\306b281e3931a68053775d07fcd4e3ab\\res\\values\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,33,46,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
