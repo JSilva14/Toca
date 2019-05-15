@@ -63,9 +63,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   Widget _buildContent() {
     if (appState.isLoading) {
-      return _buildTabView(
-        body: _buildLoadingIndicator(),
-      );
+      return _buildLoadingIndicator();
     } else if (!appState.isLoading && appState.user == null) {
       return new LoginScreen();
     } else {

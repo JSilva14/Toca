@@ -40,6 +40,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+ 	<string>Adicionar imagem a novos consumiveis</string>
 	<false/>
 </dict>
 </plist>

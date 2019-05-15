@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:toca/model/consumable.dart';
 
 Future<bool> initializeUser(String email) async {
   DocumentReference userReference =
@@ -95,6 +98,72 @@ Future<bool> updateBalance(String email, double amount) {
     return true;
   }).catchError((error) {
     print('Error: $error');
+    return false;
+  });
+}
+
+Future<bool> addNewConsumable(Consumable consumable, String imagePath) {
+  DocumentReference consumableReference =
+      Firestore.instance.collection('consumables').document(consumable.id);
+
+  return Firestore.instance.runTransaction((Transaction tx) async {
+    DocumentSnapshot postSnapshot = await tx.get(consumableReference);
+
+    int _type = 0;
+    if (consumable.type == ConsumableType.drink) {
+      _type = 1;
+    }
+
+    await tx.set(consumableReference, <String, dynamic>{
+      'availability': true,
+      'id': consumable.id,
+      'type': _type,
+      'name': consumable.name,
+      'price': consumable.price,
+      'stock': consumable.stock,
+      'minStock': consumable.minStock,
+      'imageUrl': consumable.imageURL
+    }).then((result) {
+       uploadConsumableImage(imagePath, consumable.id);
+    });
+  }).then((result) {
+    return true;
+  }).catchError((error) {
+    print('Error: $error');
+    return false;
+  });
+}
+
+Future<bool> uploadConsumableImage(String imagePath, String imageName) async {
+  StorageReference storageRef = FirebaseStorage.instance.ref().child(imageName);
+
+  final StorageUploadTask uploadTask = storageRef.putFile(
+    File(imagePath),
+  );
+
+  final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+  final String url = (await downloadUrl.ref.getDownloadURL().then((url) async {
+    print('URL Is $url');
+    await _updateConsumableImage(url, imageName);
+  }));
+}
+
+Future<bool> _updateConsumableImage(String url, String consumableId) {
+  DocumentReference consumableReference =
+      Firestore.instance.collection('consumables').document(consumableId);
+
+  return Firestore.instance.runTransaction((Transaction tx) async {
+    DocumentSnapshot postSnapshot = await tx.get(consumableReference);
+
+    if(!postSnapshot.exists){
+
+    }
+    await tx.update(consumableReference, <String, dynamic>{'imageUrl': url});
+  }).then((result) {
+    return true;
+  }).catchError((error, stacktrace) {
+    print('Error updating image: $error');
+    print(stacktrace);
     return false;
   });
 }
