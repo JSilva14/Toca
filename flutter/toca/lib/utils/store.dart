@@ -107,7 +107,7 @@ Future<bool> addNewConsumable(Consumable consumable, String imagePath) {
       Firestore.instance.collection('consumables').document(consumable.id);
 
   return Firestore.instance.runTransaction((Transaction tx) async {
-    DocumentSnapshot postSnapshot = await tx.get(consumableReference);
+    //DocumentSnapshot postSnapshot = await tx.get(consumableReference);
 
     int _type = 0;
     if (consumable.type == ConsumableType.drink) {
@@ -142,10 +142,12 @@ Future<bool> uploadConsumableImage(String imagePath, String imageName) async {
   );
 
   final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-  final String url = (await downloadUrl.ref.getDownloadURL().then((url) async {
+  await downloadUrl.ref.getDownloadURL().then((url) async {
     print('URL Is $url');
     await _updateConsumableImage(url, imageName);
-  }));
+  });
+
+  return true;
 }
 
 Future<bool> _updateConsumableImage(String url, String consumableId) {
