@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:toca/model/consumable.dart';
+import 'package:toca/model/toca_transaction.dart';
 import 'package:toca/ui/screens/newConsumable.dart';
+import 'package:toca/ui/widgets/toca_transaction_item.dart';
 import 'package:toca/utils/store.dart';
 import 'package:toca/ui/widgets/consumable_card.dart';
 import 'package:toca/model/state.dart';
@@ -24,18 +26,21 @@ class HomeScreenState extends State<HomeScreen> {
     const double _iconSize = 20.0;
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
-          title: Text(appState.user.displayName),
+          title: Text(
+              !appState.isLoading ? appState.user.displayName : 'Loading...'),
           leading: Row(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  child: Image.network(appState.user.photoUrl),
-                ),
+                child: !appState.isLoading
+                    ? CircleAvatar(
+                        child: Image.network(appState.user.photoUrl),
+                      )
+                    : CircularProgressIndicator(),
               ),
             ],
           ),
@@ -49,6 +54,7 @@ class HomeScreenState extends State<HomeScreen> {
               Tab(icon: Icon(Icons.favorite, size: _iconSize)),
               Tab(icon: Icon(Icons.restaurant, size: _iconSize)),
               Tab(icon: Icon(Icons.local_drink, size: _iconSize)),
+              Tab(icon: Icon(Icons.list, size: _iconSize)),
               Tab(icon: Icon(Icons.settings, size: _iconSize)),
             ],
           ),
@@ -62,9 +68,10 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildContent() {
-    if (appState.isLoading) {
+    /* if (appState.isLoading) {
       return _buildLoadingIndicator();
-    } else if (!appState.isLoading && appState.user == null) {
+    } else  */
+    if (!appState.isLoading && appState.user == null) {
       return new LoginScreen();
     } else {
       return _buildTabView(
@@ -144,38 +151,48 @@ class HomeScreenState extends State<HomeScreen> {
       return Padding(
         // Padding before and after the list view:
         padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: new StreamBuilder(
-                stream: stream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return _buildLoadingIndicator();
-                  return new ListView(
-                    children: snapshot.data.documents
-                        // Check if the argument ids contains document ID if ids has been passed:
-                        .where((d) => ids == null || ids.contains(d.documentID))
-                        .map((document) {
-                      return new ConsumableCard(
-                        consumable: Consumable.fromMap(
-                            document.data, document.documentID),
-                        inFavorites:
-                            appState.favorites.contains(document.documentID),
-                        onFavoriteButtonPressed: _handleFavoritesListChanged,
-                        onBuyButtonPressed: _handleItemBought,
-                      );
-                    }).toList(),
-                  );
-                },
+        child: appState.isLoading
+            ? _buildLoadingIndicator()
+            : Column(
+                children: <Widget>[
+                  Expanded(
+                    child: new StreamBuilder(
+                      stream: stream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) return _buildLoadingIndicator();
+                        return new ListView(
+                          children: snapshot.data.documents
+                              // Check if the argument ids contains document ID if ids has been passed:
+                              .where((d) =>
+                                  ids == null || ids.contains(d.documentID))
+                              .map((document) {
+                            return new ConsumableCard(
+                              consumable: Consumable.fromMap(
+                                  document.data, document.documentID),
+                              inFavorites: appState.favorites
+                                  .contains(document.documentID),
+                              onFavoriteButtonPressed:
+                                  _handleFavoritesListChanged,
+                              onBuyButtonPressed: _handleItemBought,
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       );
     }
 
     _buildSettings() {
+      CollectionReference collectionReference =
+          Firestore.instance.collection('users');
+      Stream<DocumentSnapshot> stream;
+
+      stream = collectionReference.document('Toca').snapshots();
+
       return Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -183,13 +200,18 @@ class HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
-                child: Text('Histórico da Toca'),
-                onPressed: () => print('historico toca'),
-              ),
-              RaisedButton(
-                child: Text('O Meu Histórico'),
-                onPressed: () => print('meu historico'),
+              StreamBuilder(
+                stream: stream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  return Text(
+                    'Total no Cofre:\n\n' + snapshot.data['balance'] + ' €',
+                    style: TextStyle(fontSize: 25),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
               RaisedButton(
                 child: Text('Novo consumível'),
@@ -209,11 +231,51 @@ class HomeScreenState extends State<HomeScreen> {
           ));
     }
 
+    Padding _buildTransactionHistory() {
+      CollectionReference collectionReference =
+          Firestore.instance.collection('transactions');
+      Stream<QuerySnapshot> stream;
+
+      stream = collectionReference.snapshots();
+
+      // Define query depeneding on passed args
+      return Padding(
+        // Padding before and after the list view:
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: appState.isLoading
+            ? _buildLoadingIndicator()
+            : Column(
+                children: <Widget>[
+                  Expanded(
+                    child: new StreamBuilder(
+                      stream: stream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) return _buildLoadingIndicator();
+                        return new ListView(
+                          children: snapshot.data.documents.map((document) {
+                            return TocaTransactionItem(
+                              transaction:
+                                  TocaTransaction.fromMap(document.data),
+                            );
+                          }).toList()
+                            ..sort((a, b) => b.transaction.timestamp
+                                .compareTo(a.transaction.timestamp)),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+      );
+    }
+
     return TabBarView(
       children: [
         _buildConsumables(ids: appState.favorites),
         _buildConsumables(consumableType: ConsumableType.food),
         _buildConsumables(consumableType: ConsumableType.drink),
+        _buildTransactionHistory(),
         _buildSettings(),
       ],
     );
@@ -313,19 +375,21 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: RaisedButton(
-                    child: Text('Adicionar Saldo'),
-                    onPressed: () {
-                      if (_textEditingCOntroller.text.length < 1) {
-                        scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('Insira uma quantia válida'),
-                          backgroundColor: Colors.red,
-                        ));
-                      } else {
-                        addFunds(
-                            appState.user.email, _textEditingCOntroller.text);
-                      }
-                    }),
+                child: appState.isLoading
+                    ? _buildLoadingIndicator()
+                    : RaisedButton(
+                        child: Text('Adicionar Saldo'),
+                        onPressed: () {
+                          if (_textEditingCOntroller.text.length < 1) {
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text('Insira uma quantia válida'),
+                              backgroundColor: Colors.red,
+                            ));
+                          } else {
+                            addFunds(appState.user.email,
+                                _textEditingCOntroller.text);
+                          }
+                        }),
               )
             ],
           ),
@@ -335,6 +399,10 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void addFunds(String email, String amount) {
+    setState(() {
+      appState.isLoading = true;
+    });
+
     double doubleAmount = double.parse(amount);
 
     if (doubleAmount <= 0) {
@@ -345,5 +413,9 @@ class HomeScreenState extends State<HomeScreen> {
     } else {
       updateBalance(appState.user.email, doubleAmount);
     }
+
+    setState(() {
+     appState.isLoading = false;
+    });
   }
 }

@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:toca/model/consumable.dart';
+import 'package:toca/model/toca_transaction.dart';
+import 'package:uuid/uuid.dart';
 
-Future<bool> initializeUser(String email) async {
+Future<bool> initializeUser(String email, String displayName) async {
   DocumentReference userReference =
       Firestore.instance.collection('users').document(email);
 
@@ -13,7 +16,8 @@ Future<bool> initializeUser(String email) async {
     DocumentSnapshot postSnapshot = await tx.get(userReference);
     if (!postSnapshot.exists) {
       String initialBalance = "0.0";
-      await tx.set(userReference, {'balance': initialBalance, 'favorites': []});
+      await tx.set(userReference,
+          {'name': displayName, 'balance': initialBalance, 'favorites': []});
     }
   }).then((result) {
     return true;
@@ -37,14 +41,47 @@ Future<bool> purchaseItem(
     String email, String consumableId, double consumablePrice) {
   DocumentReference consumableReference =
       Firestore.instance.collection('consumables').document(consumableId);
+  DocumentReference userReference =
+      Firestore.instance.collection('users').document(email);
 
   return Firestore.instance.runTransaction((Transaction tx) async {
     DocumentSnapshot postSnapshot = await tx.get(consumableReference);
+    Uuid uuid = Uuid();
+    TocaTransaction tocaTransaction = TocaTransaction(
+        id: uuid.v4(),
+        type: TocaTransactionType.PURCHASE,
+        userReference: userReference,
+        consumable: consumableReference,
+        amount: consumablePrice,
+        timestamp: DateTime.now());
 
     if (postSnapshot.exists) {
       await tx.update(consumableReference,
           <String, dynamic>{'stock': FieldValue.increment(-1)});
       await updateBalance(email, -consumablePrice);
+      await registerTransaction(tocaTransaction);
+    }
+  }).then((result) {
+    return true;
+  }).catchError((error) {
+    print('Error: $error');
+    return false;
+  });
+}
+
+Future<bool> updateTocaBalance(double amount) {
+    DocumentReference userReference =
+      Firestore.instance.collection('users').document('Toca');
+
+  return Firestore.instance.runTransaction((Transaction tx) async {
+    DocumentSnapshot postSnapshot = await tx.get(userReference);
+    if (postSnapshot.exists) {
+      double currentBalance = await getCurrentBalance('Toca');
+      String updatedBalance = (currentBalance + amount).toStringAsFixed(2);
+
+      await tx
+          .update(userReference, <String, dynamic>{'balance': updatedBalance});
+
     }
   }).then((result) {
     return true;
@@ -93,6 +130,19 @@ Future<bool> updateBalance(String email, double amount) {
 
       await tx
           .update(userReference, <String, dynamic>{'balance': updatedBalance});
+      if (amount > 0) {
+        Uuid uuid = Uuid();
+
+        TocaTransaction tocaTransaction = TocaTransaction(
+            id: uuid.v4(),
+            type: TocaTransactionType.DEPOSIT,
+            userReference: userReference,
+            amount: amount,
+            timestamp: DateTime.now());
+
+        await updateTocaBalance(amount);
+        await registerTransaction(tocaTransaction);
+      }
     }
   }).then((result) {
     return true;
@@ -124,7 +174,7 @@ Future<bool> addNewConsumable(Consumable consumable, String imagePath) {
       'minStock': consumable.minStock,
       'imageUrl': consumable.imageURL
     }).then((result) {
-       uploadConsumableImage(imagePath, consumable.id);
+      uploadConsumableImage(imagePath, consumable.id);
     });
   }).then((result) {
     return true;
@@ -157,15 +207,47 @@ Future<bool> _updateConsumableImage(String url, String consumableId) {
   return Firestore.instance.runTransaction((Transaction tx) async {
     DocumentSnapshot postSnapshot = await tx.get(consumableReference);
 
-    if(!postSnapshot.exists){
-
-    }
+    if (!postSnapshot.exists) {}
     await tx.update(consumableReference, <String, dynamic>{'imageUrl': url});
   }).then((result) {
     return true;
   }).catchError((error, stacktrace) {
     print('Error updating image: $error');
     print(stacktrace);
+    return false;
+  });
+}
+
+Future<bool> registerTransaction(TocaTransaction transaction) {
+  DocumentReference transactionReference =
+      Firestore.instance.collection('transactions').document(transaction.id);
+
+  return Firestore.instance.runTransaction((Transaction tx) async {
+    //transactions without consumable
+    if (transaction.consumable == null) {
+      await tx.set(transactionReference, <String, dynamic>{
+        'id': transaction.id,
+        'type': transaction.type.toString(),
+        'userReference': transaction.userReference,
+        'consumable': 'null',
+        'amount': transaction.amount,
+        'timestamp': transaction.timestamp
+      });
+    } else {
+      //transactions with consumable
+      await tx.set(transactionReference, <String, dynamic>{
+        'id': transaction.id,
+        'type': transaction.type.toString(),
+        'userReference': transaction.userReference,
+        'consumable': transaction.consumable,
+        'amount': transaction.amount,
+        'timestamp': transaction.timestamp
+      });
+    }
+  }).then((result) {
+    return true;
+  }).catchError((error) {
+    print('Error: $error');
     return false;
   });
 }

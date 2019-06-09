@@ -80,7 +80,7 @@ class _StateWidgetState extends State<StateWidget> {
     FirebaseUser firebaseUser = await signIntoFirebase(googleAccount);
     state.user = firebaseUser;
     List<String> favorites;
-    await initializeUser(firebaseUser.email).then((result) async {
+    await initializeUser(firebaseUser.email, firebaseUser.displayName).then((result) async {
       while (!result) {
         print('Initializing user');
       }
