@@ -399,10 +399,6 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void addFunds(String email, String amount) {
-    setState(() {
-      appState.isLoading = true;
-    });
-
     double doubleAmount = double.parse(amount);
 
     if (doubleAmount <= 0) {
@@ -411,11 +407,14 @@ class HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.red,
       ));
     } else {
-      updateBalance(appState.user.email, doubleAmount);
+      setState(() {
+        appState.isLoading = true;
+      });
+      updateBalance(appState.user.email, doubleAmount).then((onValue) {
+        setState(() {
+          appState.isLoading = false;
+        });
+      });
     }
-
-    setState(() {
-     appState.isLoading = false;
-    });
   }
 }
